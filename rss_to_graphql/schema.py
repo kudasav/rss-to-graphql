@@ -135,9 +135,9 @@ def create_schema(args):
 
         # add fetched items to cache
         for item in schema.items:
-            item_hash = hashlib.sha256(item['title'].encode()).hexdigest()
+            item_hash = hashlib.sha256(item.get('title', '').encode()).hexdigest()
             if not cache.get('items:'+item_hash):
-                cache.set('items:'+item_hash, item)
+                cache.set('items:'+item_hash, json.dumps(item))
 
                 # expire item after 1 day
                 cache.expire(name='items:'+item_hash, time=1440)
@@ -148,9 +148,9 @@ def create_schema(args):
             new_items = []
 
             for item in items:
-                item_hash = hashlib.sha256(item['title'].encode()).hexdigest()
+                item_hash = hashlib.sha256(item.get('title', '').encode()).hexdigest()
                 if not cache.get('items:'+item_hash):
-                    cache.set('items:'+item_hash, item)
+                    cache.set('items:'+item_hash, json.dumps(item))
                     
                     # expire item after 1 day
                     cache.expire(name='items:'+item_hash, time=1440)
